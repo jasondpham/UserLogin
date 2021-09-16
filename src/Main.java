@@ -1,6 +1,8 @@
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
+    private static Database db = new Database();
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         System.out.println("Please enter your username:");
@@ -15,6 +17,10 @@ public class Main {
     }
 
     private static boolean isValidCred(String user, String pass) {
-        return user.equals("phamjason") && pass.equals("123");
+        Map<String, String> users = db.getUsers();
+        if (users.get(user) != null) {
+            return users.get(user).equals(pass);
+        }
+        return false;
     }
 }
