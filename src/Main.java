@@ -7,20 +7,14 @@ public class Main {
         Scanner s = new Scanner(System.in);
         System.out.println("Please enter your username:");
         String user = s.nextLine();
-        System.out.println("Please enter your password");
+        System.out.println("Please enter your password:");
         String pass = s.nextLine();
-        if (isValidCred(user, pass)) {
+        if (db.isValidCred(user, pass)) {
             System.out.println("Welcome!");
         } else {
             System.out.println("That username or password does not exist.");
         }
+        s.close();
     }
 
-    private static boolean isValidCred(String user, String pass) {
-        Map<String, String> users = db.getUsers();
-        if (users.get(user) != null) {
-            return users.get(user).equals(pass);
-        }
-        return false;
-    }
 }
