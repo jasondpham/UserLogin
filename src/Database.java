@@ -9,8 +9,8 @@ public class Database {
 
     public Database() {
         users = new HashMap<>();
-        users.put("phamjason", pwHash("123"));
-        users.put("jasonpham", pwHash("234"));
+        addUser("phamjason", "123");
+        addUser("jasonpham", "234");
     }
 
     public Map<String, String> getUsers() {
@@ -45,5 +45,13 @@ public class Database {
             return users.get(user).equals(pwHash(pass));
         }
         return false;
+    }
+
+    public String addUser(String user, String pass) {
+        if (user != null || !users.containsKey(user)) {
+            users.put(user, pwHash(pass));
+            return user;
+        }
+        return null;
     }
 }
