@@ -2,7 +2,7 @@ package controller;
 
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import main.java.model.User;
+import model.User;
 
 import java.io.BufferedReader;
 import java.io.File;
