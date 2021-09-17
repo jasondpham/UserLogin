@@ -1,4 +1,7 @@
-import java.util.Map;
+package controller;
+
+import controller.Database;
+
 import java.util.Scanner;
 
 public class Main {

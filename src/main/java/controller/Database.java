@@ -1,3 +1,5 @@
+package controller;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -9,8 +11,10 @@ public class Database {
 
     public Database() {
         users = new HashMap<>();
-        addUser("phamjason", "123");
-        addUser("jasonpham", "234");
+        loadDatabase();
+    }
+
+    private void loadDatabase() {
     }
 
     public Map<String, String> getUsers() {
