@@ -1,23 +1,39 @@
 package controller;
 
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import main.java.model.User;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Database {
-    private Map<String, String> users;
+    private List<User> users;
 
     public Database() {
-        users = new HashMap<>();
+        users = new ArrayList<>();
+        addUser("phamjason", "123");
+        addUser("jasonpham", "234");
         loadDatabase();
     }
 
     private void loadDatabase() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("resources/users.json"));
+            ObjectMapper objectMapper = new ObjectMapper();
+            users = Arrays.asList(objectMapper.readValue(br, User[].class));
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
     }
 
-    public Map<String, String> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
@@ -45,16 +61,29 @@ public class Database {
     }
 
     public boolean isValidCred(String user, String pass) {
-        if (users.get(user) != null) {
-            return users.get(user).equals(pwHash(pass));
+        for (User curr : users) {
+            if (curr.getUsername().equals(user)) {
+                return pwHash(pass).equals(curr.getPassword());
+            }
         }
         return false;
     }
 
     public String addUser(String user, String pass) {
-        if (user != null || !users.containsKey(user)) {
-            users.put(user, pwHash(pass));
-            return user;
+        if (user != null) {
+            for (User curr : users) {
+                if (curr.getUsername().equals(user)) {
+                    return null;
+                }
+            }
+            users.add(new User(user, pwHash(pass)));
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writer(new DefaultPrettyPrinter());
+            try {
+                mapper.writeValue(new File("resources/users.json"), users);
+            } catch (Exception ignored) {
+
+            }
         }
         return null;
     }
