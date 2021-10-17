@@ -9,18 +9,30 @@ import java.io.File;
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Database {
     private List<User> users;
+    private Connection connection;
 
+    /**
+     * Initializes the database
+     */
     public Database() {
         users = new ArrayList<>();
-        addUser("phamjason", "123");
-        addUser("jasonpham", "234");
-        loadDatabase();
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/users", "java", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadDatabase() {
@@ -28,13 +40,9 @@ public class Database {
             BufferedReader br = new BufferedReader(new FileReader("resources/users.json"));
             ObjectMapper objectMapper = new ObjectMapper();
             users = Arrays.asList(objectMapper.readValue(br, User[].class));
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-
-    public List<User> getUsers() {
-        return users;
     }
 
     private String pwHash(String pass) {
@@ -61,30 +69,37 @@ public class Database {
     }
 
     public boolean isValidCred(String user, String pass) {
-        for (User curr : users) {
-            if (curr.getUsername().equals(user)) {
-                return pwHash(pass).equals(curr.getPassword());
-            }
+        String search = "select * from userinfo where username=?";
+        try {
+            PreparedStatement query = connection.prepareStatement(search);
+            query.setString(1, user);
+            ResultSet users = query.executeQuery();
+            users.next();
+            return Objects.equals(pwHash(pass), users.getString(3));
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return false;
     }
 
-    public String addUser(String user, String pass) {
-        if (user != null) {
-            for (User curr : users) {
-                if (curr.getUsername().equals(user)) {
-                    return null;
-                }
+    public void addUser(String user, String pass) {
+        try {
+            Statement insertStatement = connection.createStatement();
+            String query = "select count(*) from userinfo where username=";
+            query += "'" + user + "'";
+            ResultSet users = insertStatement.executeQuery(query);
+            users.next();
+            if (users.getInt(1) == 0) {
+                String insert = "insert into userinfo values (NULL,?, ?)";
+                insertStatement = connection.prepareStatement(insert);
+                ((PreparedStatement) insertStatement).setString(1, user);
+                ((PreparedStatement) insertStatement).setString(2, pwHash(pass));
+                ((PreparedStatement) insertStatement).executeUpdate();
             }
-            users.add(new User(user, pwHash(pass)));
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writer(new DefaultPrettyPrinter());
-            try {
-                mapper.writeValue(new File("resources/users.json"), users);
-            } catch (Exception ignored) {
-
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return null;
     }
 }
