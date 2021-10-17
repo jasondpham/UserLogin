@@ -13,3 +13,4 @@ to user accounts.
 
 ## Todo
 1. Create GUI to be able to let users login or create a new user.
+2. Create REST API to communicate between frontend and backend.
