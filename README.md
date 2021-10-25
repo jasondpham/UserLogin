@@ -7,9 +7,10 @@ to simulate client login to a server.
 to user accounts.
    
 2. Handles multiple unique users.
-3. Stores user info in json file rather than Map.
+
+
+3. Stores user information in a MySQL database using JDBC rather than JSON file.
+
 ## Todo
-1. Create a database using SQLite or MySQL to store users and 
-be able to query the database.
-   
-2. Create GUI to be able to let users login or create a new user.
+1. Create GUI to be able to let users login or create a new user.
+2. Create REST API to communicate between frontend and backend.
