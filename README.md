@@ -8,11 +8,12 @@ to user accounts.
    
 2. Handles multiple unique users.
 
-3. Stores user information in a MySQL database using a JPA Repository.
+3. Stores user information in a MySQL database using a JPA Repository
 4. Utilizes Java Spring framework
 5. Basic web frontend using Javascript and HTML
-6. Makes Ajax calls to server using jquery
-7. Handles API calls using a Java Spring Rest Controller.
+6. Makes Ajax calls to server using jQuery
+7. Handles API calls using a Java Spring Rest Controller
 
 ## Todo
 1. Enhance frontend experience by adding CSS to the webpage.
+2. Add Registration feature
