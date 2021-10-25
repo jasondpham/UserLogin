@@ -2,16 +2,29 @@ package model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import org.springframework.lang.NonNull;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class User {
+    public User() {
+
+    }
+
     public String getUsername() {
         return username;
     }
 
-    private String username;
-    private String password;
+    private @Id @GeneratedValue Long id;
+    @Column(name="username")
+    private @NonNull String username;
+    private @NonNull String password;
 
-    public User(@JsonProperty("username") String username, @JsonProperty("password") String password) {
+    User(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -27,4 +40,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
 }

@@ -3,10 +3,12 @@ package controller;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.Connection;
@@ -18,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 
+@Repository
 public class Database {
     private List<User> users;
     private Connection connection;
@@ -28,8 +32,14 @@ public class Database {
      */
     public Database() {
         users = new ArrayList<>();
+        Properties prop = new Properties();
+        InputStream inputStream = getClass().getResourceAsStream("/src/main/resources/database.properties");
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/users", "java", "password");
+            prop.load(inputStream);
+            String url = prop.getProperty("DB.url");
+            String user = prop.getProperty("DB.user");
+            String password = prop.getProperty("DB.password");
+            connection = DriverManager.getConnection(url, user, password);
         } catch (Exception e) {
             e.printStackTrace();
         }

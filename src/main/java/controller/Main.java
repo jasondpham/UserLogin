@@ -1,12 +1,16 @@
 package controller;
 
 import controller.Database;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Scanner;
 
+@SpringBootApplication
 public class Main {
     private static Database db = new Database();
     public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
         Scanner s = new Scanner(System.in);
         System.out.println("Please enter your username:");
         String user = s.nextLine();
